@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Play Beat</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+      --bg-color:#fff;
+      --text-color:#3D3E40;
+      --accent-color:#E32C2B;
+      --bg1-color:#e2e2e2;--transition-fast:.2s
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 3rem; 
+            background: var(--bg1-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            color: var(--text-color);
+            height: 65px;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-toggle, .user-icon {
+            display: none;
+        }
+
+        #datetime-display {
+            display: none !important; 
+        }
+
+        @media (min-width: 769px) {
+            #datetime-display {
+                display: block !important; 
+            }
+        }
+
+        #user-dropdown {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent; 
+            padding: 0;
+            z-index: 1010;
+            display: none; 
+            width: 90%; 
+            max-width: 300px;
+        }
+
+        #user-dropdown.show {
+            display: block; 
+        }
+
+        #mobile-menu {
+            position: fixed;
+            top: 65px; 
+            left: 0;
+            bottom: 0;
+            width: 70%; 
+            max-width: 300px;
+            background-color: var(--bg1-color); 
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            transform: translateX(-100%); 
+            transition: transform 0.3s ease-in-out; 
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+        #mobile-menu.show {
+            transform: translateX(0); 
+        }
+
+        #mobile-menu button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 15px 30px;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            font-size: 18px;
+            transition: background-color 0.2s;
+            font-weight: bold; 
+        }
+        #mobile-menu button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-header { padding: 1rem 1rem; }
+            .nav-left, .nav-right { display: none; }
+
+            .menu-toggle {
+                display: block;
+                font-size: 24px;
+                background: none;
+                border: none;
+                color: var(--text-color); 
+                padding: 0;
+                cursor: pointer;
+            }
+            .user-icon {
+                display: flex;
+                background-color: var(--accent-color); 
+                color: var(--bg-color);
+                border-radius: 10px; 
+                width: 50px; 
+                height: 45px;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                border: none;
+                cursor: pointer;
+            }
+        }
+        
+        
+        .dropdown-button {
+            display: none; 
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--bg1-color); 
+            background-color: var(--accent-color);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+
+        @media (min-width: 560px) {
+          .toggle-buttons {
+           display: block; 
+          }
+      }
+
+      @media (max-width: 559px) {
+        .toggle-buttons {
+        display: none; 
+      }
+    }
+
+    </style>
+</head>
+<body class="light-green">
+
+    <header class="nav-header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-left">
+                <button onclick="window.location.href='about.html'">About</button>
+                <button onclick="window.location.href='news.html'">News</button>
+                <button onclick="window.location.href='listen.html'">Start Listening</button>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="nav-right">
+                <button id="register-btn" onclick="window.location.href='register.html'" style="display: inline-block; font-size: 20px; font-weight: bold; padding: 12px 50px;">Register</button>
+                <button id="user-area" style="display:none;"></button>
+            </div>
+            <button class="user-icon" id="user-icon-btn">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </header>
+
+    <div id="user-dropdown">
+        <button class="dropdown-button" id="toggle-theme-btn-mobile">
+            <i class="fas fa-adjust"></i> Toggle Theme
+        </button>
+        <button class="dropdown-button" id="change-background-btn-mobile">
+            <i class="fas fa-image"></i> Change Background
+        </button>
+    </div>
+
+    <div id="mobile-menu">
+        <div class="menu-links">
+            <button onclick="window.location.href='about.html'">About</button>
+            <button onclick="window.location.href='news.html'">News</button>
+            <button onclick="window.location.href='listen.html'" class="mobile-link-btn">Start Listening</button>
+        </div>
+    </div>
+
+    <div class="logo-wrap">
+        <img id="logo" src="Logos/logoW.png" alt="logo" width="300" data-mini="false" class="mt-5 pt-4">
+    </div>
+
+    <section class="intropage">
+        <h2>
+            Welcome to your music world! <br>
+            Your personal online player with favorite tracks, playlists, and smart recommendations<br>
+            Music is always with you — on your computer, tablet, or phone
+        </h2>
+        <div class="vinyl">
+            <div class="label"></div>
+            <div class="spindle"></div>
+        </div>
+    </section>
+
+    <footer style="background: #3D3E40; color: white; text-align: center; padding: 33px; margin-top: 120px;"> 
+        <p>&copy; All Songs Reserved | Home </p> 
+    </footer> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="toggleTheme.js"></script>
+    <script src="register.js"></script>
+    <script src="assignment7.js"></script>
+    <script>
+        function updateHeaderUI() {
+            const user = localStorage.getItem('user');
+            const isLoggedIn = !!user;
+
+            const registerBtn = document.getElementById('register-btn');
+            const userAreaBtn = document.getElementById('user-area');
+            const userAreaMobileBtn = document.getElementById('user-area-mobile-btn');
+            
+            if (registerBtn) {
+                registerBtn.style.display = isLoggedIn ? 'none' : 'block';
+            }
+
+            if (userAreaBtn) {
+                userAreaBtn.style.display = isLoggedIn ? 'block' : 'none';
+                if (isLoggedIn) {
+                    let username = 'User Area';
+                    try {
+                        const userData = JSON.parse(user);
+                        username = 'Welcome, ' + (userData.username || 'User');
+                    } catch (e) {
+                        
+                    }
+                    userAreaBtn.textContent = username;
+                    userAreaBtn.onclick = () => window.location.href = 'user-area.html';
+                }
+            }
+
+            if (userAreaMobileBtn) {
+                userAreaMobileBtn.style.display = isLoggedIn ? 'block' : 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateHeaderUI);
+
+        document.getElementById('user-icon-btn').addEventListener('click', function() {
+            const dropdown = document.getElementById('user-dropdown');
+            const isLoggedIn = !!localStorage.getItem('user');
+            
+            if (isLoggedIn) {
+                dropdown.classList.toggle('show');
+            } else {
+                window.location.href = 'register.html';
+                dropdown.classList.remove('show');
+            }
+            
+            document.getElementById('mobile-menu').classList.remove('show');
+        });
+
+        document.getElementById('menu-toggle-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('show');
+            document.getElementById('user-dropdown').classList.remove('show');
+        });
+
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuToggle = document.getElementById('menu-toggle-btn');
+            const userDropdown = document.getElementById('user-dropdown');
+            const userIcon = document.getElementById('user-icon-btn');
+            
+            if (mobileMenu && menuToggle && !menuToggle.contains(event.target) && !mobileMenu.contains(event.target) && mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+            }
+            if (userDropdown && userDropdown.classList.contains('show') && userIcon && !userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        document.getElementById('toggle-theme-btn-mobile').addEventListener('click', function() {
+            if (typeof toggleTheme === 'function') {
+                toggleTheme(); 
+            }
+            document.getElementById('user-dropdown').classList.remove('show');
+        });
+
+        document.getElementById('change-background-btn-mobile').addEventListener('click', function() {
+            if (typeof changeBackground === 'function') {
+                changeBackground(); 
+            }
+            document.getElementById('user-dropdown').classList.remove('show');
+        });
+    </script>
+</body>
+</html>

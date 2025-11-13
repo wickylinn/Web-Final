@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Play Beat</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg-color: #1a1a1a;
+      --text-color: #fff;
+      --accent-color: #7fd367;
+      --bg1-color: #2a2a2a;
+      --transition-fast: .2s;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 0.3s, color 0.3s;
+      padding-top: 80px;
+    }
+    /* Header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      background: var(--bg1-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 65px;
+    }
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    button {
+      background: var(--accent-color);
+      color: var(--bg-color);
+      font-weight: 700;
+      border: 0;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    button:hover { opacity: 0.9; transform: translateY(-2px); }
+    .menu-toggle, .user-icon {
+      display: none;
+    }
+    /* Mobile menu */
+    #mobile-menu {
+      position: fixed;
+      top: 65px;
+      left: 0;
+      bottom: 0;
+      width: 70%;
+      max-width: 300px;
+      background-color: var(--bg1-color);
+      box-shadow: 2px 0 10px rgba(0,0,0,.5);
+      z-index: 999;
+      transform: translateX(-100%);
+      transition: transform .3s ease-in-out;
+      padding: 1rem 0;
+      overflow-y: auto;
+    }
+    #mobile-menu.show { transform: translateX(0); }
+    #mobile-menu button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 15px 30px;
+      color: var(--text-color);
+      background: none;
+      border: none;
+      font-size: 18px;
+      transition: background-color .2s;
+      font-weight: bold;
+    }
+    #mobile-menu button:hover { background-color: rgba(0,0,0,.1); }
+    @media (max-width:768px) {
+      .nav-left, .nav-right { display: none; }
+      .menu-toggle {
+        display: block;
+        font-size: 24px;
+        background: none;
+        border: none;
+        color: var(--text-color);
+        padding: 0;
+        cursor: pointer;
+      }
+      /* Completely hide the user icon in mobile view */
+      .user-icon { display: none !important; }
+    }
+    .settings-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .settings-card {
+      background: var(--bg1-color);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .settings-card h3 {
+      color: var(--accent-color);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-color);
+    }
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .setting-item:last-child { border-bottom: none; }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--accent-color); }
+    input:checked + .slider:before { transform: translateX(26px); }
+    .danger-zone {
+      background: #2a2a2a;
+      border: 2px solid #e74c3c;
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header class="nav-header">
+    <div class="header-left">
+      <button class="menu-toggle" id="menu-toggle-btn"><i class="fas fa-bars"></i></button>
+      <div class="nav-left">
+        <button onclick="window.location.href='index.html'">Home</button>
+        <button onclick="window.location.href='about.html'">About</button>
+        <button onclick="window.location.href='news.html'">News</button>
+        <button onclick="window.location.href='listen.html'">Start Listening</button>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="user-icon" id="user-icon-btn"><i class="fas fa-user"></i></button>
+    </div>
+  </header>
+  <div id="mobile-menu">
+    <button onclick="window.location.href='index.html'">Home</button>
+    <button onclick="window.location.href='about.html'">About</button>
+    <button onclick="window.location.href='news.html'">News</button>
+    <button onclick="window.location.href='listen.html'">Start Listening</button>
+    <button onclick="window.location.href='profile.html'">Profile</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <div class="settings-container">
+    <h1 class="mb-4">Settings</h1>
+    <div class="settings-card">
+      <h3>Account Settings</h3>
+      <div class="setting-item">
+        <div><strong>Change Username</strong><br><small>Update your display name</small></div>
+        <button class="btn btn-outline-secondary btn-sm" onclick="changeUsername()">Edit</button>
+      </div>
+      <div class="setting-item">
+        <div><strong>Change Email</strong><br><small>Update your email address</small></div>
+        <button class="btn btn-outline-secondary btn-sm" onclick="changeEmail()">Edit</button>
+      </div>
+      <div class="setting-item">
+        <div><strong>Change Password</strong><br><small>Update your password</small></div>
+        <button class="btn btn-outline-secondary btn-sm" onclick="changePassword()">Edit</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <h3>Notifications</h3>
+      <div class="setting-item">
+        <div><strong>Email Notifications</strong><br><small>Receive updates via email</small></div>
+        <label class="toggle-switch"><input type="checkbox" id="emailNotif" checked><span class="slider"></span></label>
+      </div>
+      <div class="setting-item">
+        <div><strong>Friend Activity</strong><br><small>See what your friends are listening to</small></div>
+        <label class="toggle-switch"><input type="checkbox" id="friendActivity"><span class="slider"></span></label>
+      </div>
+    </div>
+    <div class="text-center my-4">
+      <button class="btn btn-primary btn-lg px-5" onclick="saveSettings()">Save All Changes</button>
+    </div>
+    <div class="danger-zone">
+      <h3 style="color:#e74c3c;">Danger Zone</h3>
+      <p>These actions are irreversible. Please be certain</p>
+      <button class="btn btn-outline-danger" onclick="clearData()">Clear All Data</button>
+      <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('menu-toggle-btn').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('mobile-menu');
+      const toggle = document.getElementById('menu-toggle-btn');
+      if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+        menu.classList.remove('show');
+      }
+    });
+    function logout() {
+      if (confirm("Are you sure you want to log out?")) {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+      }
+    }
+    function saveSettings() {
+      const settings = {
+        emailNotif: document.getElementById('emailNotif').checked,
+        friendActivity: document.getElementById('friendActivity').checked
+      };
+      localStorage.setItem('userSettings', JSON.stringify(settings));
+      alert('Settings saved successfully!');
+    }
+    function changeUsername() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const newName = prompt('Enter new username:', user.username || '');
+      if (newName && newName.trim()) {
+        user.username = newName.trim();
+        localStorage.setItem('user', JSON.stringify(user));
+        alert('Username updated!');
+      }
+    }
+    function changeEmail() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const newEmail = prompt('Enter new email:', user.email || '');
+      if (newEmail && newEmail.includes('@')) {
+        user.email = newEmail.trim();
+        localStorage.setItem('user', JSON.stringify(user));
+        alert('Email updated!');
+      }
+    }
+    function changePassword() {
+      const currentPass = prompt('Enter current password:');
+      if (!currentPass) return;
+      const newPass = prompt('Enter new password (min 8 chars):');
+      if (newPass && newPass.length >= 8) {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        user.password = newPass;
+        localStorage.setItem('user', JSON.stringify(user));
+        alert('Password changed!');
+      } else {
+        alert('Password too short!');
+      }
+    }
+    function clearData() {
+      if (confirm('Clear all your data?')) {
+        localStorage.clear();
+        alert('Data cleared!');
+      }
+    }
+    function deleteAccount() {
+      if (confirm('Delete your account permanently?')) {
+        localStorage.clear();
+        window.location.href = 'index.html';
+      }
+    }
+  </script>
+</body>
+</html>

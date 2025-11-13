@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign In - Play Beat</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #3D3E40;
+            --accent-color: #E32C2B;
+            --bg1-color: #f5f5f5;
+            --primary-green: #7bed9f; 
+        }
+        .dark-theme {
+            --bg-color: #30302f;
+            --text-color: #eaeaea;
+            --accent-color: #7fd367; 
+            --bg1-color: #424241;
+            --primary-green: #7fd367; 
+        }
+
+        body{
+            background:var(--bg-color);
+            color:var(--text-color);
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background .3s, color .3s;
+            font-size:16px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 3rem;
+            background: var(--bg1-color) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            height: 65px;
+        }
+        .nav-left, .nav-right {
+            display: flex; align-items: center; gap: 1rem;
+        }
+
+        .nav-header button {
+            background: none; 
+            color: var(--text-color);
+            font-weight: 700; border: 0;
+            padding: 12px 20px; font-size: 16px;
+            border-radius: 100px; cursor: pointer; transition: all .2s;
+        }
+
+        @media (min-width: 769px) { 
+            .nav-left button, .nav-right button {
+                background-color: var(--primary-green);
+                color: var(--bg1-color);
+                border-radius: 100px; 
+                padding: 8px 18px;
+                font-size: 15px;
+            }
+
+            .dark-theme .nav-left button, .dark-theme .nav-right button {
+                background-color: var(--accent-color);
+                color: var(--bg1-color);
+            }
+
+            .nav-left button:hover, .nav-right button:hover {
+                background-color: var(--accent-color);
+                color: #ffffff;
+            }
+            .dark-theme .nav-left button:hover, .dark-theme .nav-right button:hover {
+                 background-color: var(--primary-green);
+            }
+        }
+
+        .menu-toggle, .user-icon {
+            display: none;
+        }
+
+        #mobile-menu {
+            position: fixed;
+            top: 65px; 
+            left: 0;
+            bottom: 0;
+            width: 70%; 
+            max-width: 300px;
+            background-color: var(--bg1-color); 
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            transform: translateX(-100%); 
+            transition: transform 0.3s ease-in-out; 
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+        #mobile-menu.show {
+            transform: translateX(0); 
+        }
+        #mobile-menu button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 15px 30px;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        #mobile-menu button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-header { 
+                padding: 1rem 1rem; 
+            }
+            .nav-left, .nav-right { display: none; } 
+            
+            .header-left, .header-right {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .menu-toggle {
+                display: block;
+                font-size: 24px;
+                background: none; border: none;
+                color: var(--primary-green);
+                padding: 0; cursor: pointer;
+            }
+            .user-icon {
+                display: flex; 
+                background-color: var(--primary-green); 
+                color: var(--bg1-color); 
+                border-radius: 10px; 
+                width: 50px; height: 45px;
+                align-items: center; justify-content: center;
+                font-size: 22px; border: none; cursor: pointer;
+            }
+            .dark-theme .user-icon {
+                background-color: var(--accent-color); 
+                color: var(--bg1-color);
+            }
+        }
+
+        button, .btn-theme {
+            background:var(--accent-color);
+            color:var(--bg-color);
+            font-weight:700;border:0;padding:12px 20px;font-size:16px;border-radius:100px;cursor:pointer;transition:all .2s
+        }
+        button:hover, .btn-theme:hover{opacity:.9;transform:translateY(-1px)}
+
+        .card{background:var(--bg1-color)!important;border:none!important;color:var(--text-color)!important}
+        .form-control,.input-group-text{
+            background:var(--bg-color)!important;color:var(--text-color)!important;
+            border:2px solid #ddd!important;transition:all .2s
+        }
+        .form-control:focus{
+            border-color:var(--accent-color)!important;
+            box-shadow:0 0 0 .2rem rgba(227,44,43,.25)!important
+        }
+
+        .vinyl-decoration{
+            width:120px;height:120px;border-radius:50%;
+            background:repeating-radial-gradient(circle,#111 0 2px,#393939 3px 4px);
+            position:relative;box-shadow:inset 0 0 20px #000;animation:spin 5s linear infinite;
+            margin-inline:auto
+        }
+        .vinyl-decoration .label{
+            width:50px;height:50px;background:var(--accent-color);border-radius:50%;
+            position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;box-shadow:inset 0 0 10px #000
+        }
+        .vinyl-decoration .spindle{
+            width:10px;height:10px;background:var(--bg-color);border-radius:50%;
+            position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2
+        }
+        @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+        .shake{animation:shake .25s linear 0s 1}
+        @keyframes shake{
+            0%{transform:translateX(0)}
+            25%{transform:translateX(-6px)}
+            50%{transform:translateX(6px)}
+            75%{transform:translateX(-4px)}
+            100%{transform:translateX(0)}
+        }
+
+        .auth-wrap{max-width: 560px; margin: 0 auto;}
+    </style>
+</head>
+
+<body>
+    <header class="nav-header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-left">
+                <button onclick="window.location.href='index.html'">Home</button>
+                <button onclick="window.location.href='about.html'">About</button>
+                <button onclick="window.location.href='news.html'">News</button>
+                <button onclick="window.location.href='listen.html'">Start Listening</button>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="user-icon" id="user-icon-btn">
+                <i class="fas fa-sign-in-alt"></i> 
+            </button>
+            <div class="nav-right">
+                <button onclick="window.location.href='register.html'">Register</button>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu">
+        <div class="menu-links">
+            <button onclick="window.location.href='index.html'">Home</button>
+            <button onclick="window.location.href='about.html'">About</button>
+            <button onclick="window.location.href='news.html'">News</button>
+            <button onclick="window.location.href='listen.html'">Start Listening</button>
+            <button onclick="window.location.href='register.html'">Register</button>
+        </div>
+    </div>
+
+    <main class="container mt-5 pt-5">
+        <div class="auth-wrap">
+
+            <div class="card text-center shadow-lg mb-4" 
+                 style="background: linear-gradient(135deg, var(--bg1-color) 0%, var(--bg-color) 100%) !important;">
+                <div class="card-body p-5">
+                    <div class="vinyl-decoration mb-4">
+                        <div class="label"></div>
+                        <div class="spindle"></div>
+                    </div>
+                    <h2 class="mb-2">Welcome Back</h2>
+                    <p class="mb-0">Sign in to continue your beat</p>
+                </div>
+            </div>
+
+            <div class="card shadow-lg mb-3" id="signin-card">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="text-center mb-2">Sign In</h1>
+
+                    <form id="signin-form" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label">Login</label>
+                            <div class="input-group">
+                                <span class="input-group-text">👤</span>
+                                <input type="text" id="login" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">🔒</span>
+                                <input type="password" id="password" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div id="error-box" class="text-danger small mb-3" style="min-height:1.25rem;"></div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Sign In</button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <span>Don’t have an account?</span><br>
+                        <a href="register.html" class="btn btn-outline-secondary btn-sm">Register</a>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="index.html" class="btn btn-outline-secondary btn-sm">← Back to Home</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="toggleTheme.js"></script>
+
+    <script>
+
+        document.getElementById('user-icon-btn').addEventListener('click', function() {
+
+            window.location.href = 'register.html';
+
+        });
+
+        document.getElementById('menu-toggle-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuToggle = document.getElementById('menu-toggle-btn');
+            
+            if (mobileMenu && menuToggle && !menuToggle.contains(event.target) && !mobileMenu.contains(event.target) && mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+            }
+        });
+        (function(){
+            const form = document.getElementById('signin-form');
+            const loginInput = document.getElementById('login');
+            const passInput  = document.getElementById('password');
+            const errorBox = document.getElementById('error-box');
+            const card = document.getElementById('signin-card');
+
+            const ADMIN_LOGIN = 'admin';
+            const ADMIN_PASS  = '123';
+
+            form.addEventListener('submit', function(e){
+                e.preventDefault();
+
+                const login = loginInput.value.trim();
+                const pass  = passInput.value;
+
+                if(!login || !pass){
+                    showError('Please fill in both fields.');
+                    shake(card);
+                    return;
+                }
+
+                if(login === ADMIN_LOGIN && pass === ADMIN_PASS){
+                    const adminUser = {
+                        username: "Administrator",
+                        phone: "+7 (777) 777-77-77",
+                        email: "admin@playbeat.com",
+                        avatar: "defaultAva.png",
+                        friends: []
+                    };
+                    localStorage.setItem("user", JSON.stringify(adminUser));
+                    localStorage.setItem("isAdmin", "true");
+                    setTimeout(()=>window.location.href='profile.html', 700);
+                    return;
+                }
+
+                localStorage.removeItem("isAdmin");
+                localStorage.removeItem("user");
+
+                showError('Invalid credentials. Admin only.');
+                shake(card);
+            });
+
+            function showError(msg){ errorBox.textContent = msg; }
+            function shake(el){
+                el.classList.remove('shake');
+                void el.offsetWidth;
+                el.classList.add('shake');
+            }
+        })();
+    </script>
+
+</body>
+</html>
